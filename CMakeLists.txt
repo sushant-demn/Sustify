@@ -1,7 +1,4 @@
-﻿# CMakeList.txt : CMake project for MusicStreamingApp, include source and define
-# project specific logic here.
-#
-cmake_minimum_required (VERSION 3.10)
+﻿cmake_minimum_required (VERSION 3.10)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -11,8 +8,27 @@ endif()
 
 project ("MusicStreamingApp")
 
+include(FetchContent)
+
+FetchContent_Declare(
+    webview
+    GIT_REPOSITORY https://github.com/webview/webview
+    GIT_TAG 0.12.0)
+FetchContent_MakeAvailable(webview)
+
+set(SOURCE_FILES
+    src/main.cpp
+    src/file_system.cpp
+)
+
 # Add source to this project's executable.
-add_executable (MusicStreamingApp "MusicStreamingApp.cpp" "MusicStreamingApp.h")
+add_executable (MusicStreamingApp "${SOURCE_FILES}")
+#add_executable (MusicStreamingApp WIN32 "include/window.cpp" )
+
+target_link_libraries(MusicStreamingApp PRIVATE webview::core)
+target_include_directories(MusicStreamingApp PUBLIC "${PROJECT_SOURCE_DIR}/include")
+target_include_directories(MusicStreamingApp PUBLIC "${PROJECT_SOURCE_DIR}/headers")
+
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET MusicStreamingApp PROPERTY CXX_STANDARD 20)
