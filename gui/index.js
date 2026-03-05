@@ -16,11 +16,8 @@ async function getPath() {
 }
 
 function changeTitle(title) {
-    // '.' finds the class, '#' finds an ID. 
-    // This returns the single element directly.
+    
     const titleElement = document.querySelector('.song-title');
-
-    // Safety check: always make sure the element actually exists
     if (titleElement) {
         titleElement.textContent = title;
     } else {
