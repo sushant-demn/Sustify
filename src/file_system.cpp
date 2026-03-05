@@ -15,5 +15,7 @@ std::string getPath() {
 		std::replace(selection[0].begin(), selection[0].end(), '\\', '/');
 		return selection[0];
 	}
+	if (selection.empty())
+		return "selection cancelled";
 	return "";
 }

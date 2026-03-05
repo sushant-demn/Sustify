@@ -125,7 +125,7 @@ body {
 }
 
 .progress-fill {
-  width: 70%;
+  width: 0%;
   /* Example percentage */
   height: 100%;
   background: #333;

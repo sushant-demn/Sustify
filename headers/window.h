@@ -1,5 +1,7 @@
 #pragma once
 #include<iostream>
+#include <objbase.h>
 #include<string>
-#include "main.h"
+#include<algorithm>
+#include "audio.h"
 #include "webview/webview.h"

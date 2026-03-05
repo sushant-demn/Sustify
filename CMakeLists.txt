@@ -1,6 +1,5 @@
 ﻿cmake_minimum_required (VERSION 3.10)
 
-# Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
@@ -17,21 +16,30 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(webview)
 
 set(SOURCE_FILES
-    src/main.cpp
+    src/window.cpp
+    src/audio.cpp
     src/file_system.cpp
 )
 
-# Add source to this project's executable.
-add_executable (MusicStreamingApp "${SOURCE_FILES}")
-#add_executable (MusicStreamingApp WIN32 "include/window.cpp" )
+
+add_executable (MusicStreamingApp WIN32 "${SOURCE_FILES}")
+
+
 
 target_link_libraries(MusicStreamingApp PRIVATE webview::core)
+target_include_directories(MusicStreamingApp PRIVATE "C:/vcpkg/installed/x64-windows/include")
+target_link_libraries(MusicStreamingApp PRIVATE "C:/vcpkg/installed/x64-windows/lib/tag.lib")
 target_include_directories(MusicStreamingApp PUBLIC "${PROJECT_SOURCE_DIR}/include")
 target_include_directories(MusicStreamingApp PUBLIC "${PROJECT_SOURCE_DIR}/headers")
 
+add_custom_command(TARGET MusicStreamingApp POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "C:/vcpkg/installed/x64-windows/bin/tag.dll"
+    $<TARGET_FILE_DIR:MusicStreamingApp>
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET MusicStreamingApp PROPERTY CXX_STANDARD 20)
 endif()
 
-# TODO: Add tests and install targets if needed.
+
