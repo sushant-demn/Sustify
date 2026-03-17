@@ -63,6 +63,7 @@ body {
   align-items: center;
   justify-content: center;
   margin-right: 20px;
+  flex-shrink: 0;
   /* Space between Art and Controls */
 }
 
@@ -75,6 +76,8 @@ body {
 .player-controls {
   flex-grow: 1;
   /* Takes up middle space */
+  min-width: 0;
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -82,9 +85,15 @@ body {
 }
 
 .song-title {
+  width: 250px;
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 15px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 10px;
 }
 
 .buttons {
@@ -103,6 +112,7 @@ body {
   /* Standard Webkit way to make vertical sliders */
   -webkit-appearance: slider-vertical;
   appearance: slider-vertical;
+  flex-shrink: 0;
 }
 
 /* --- 4. BOTTOM AREA (Progress Bar) --- */
@@ -137,4 +147,26 @@ body {
   /* Pushes text to the right */
   font-size: 0.8rem;
   margin-top: 4px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.play_pause {
+  height: 40px;
+  width: 40px;
+}
+
+.previousSong {
+  height: 25px;
+  width: 25px;
+
+}
+
+.nextSong {
+  height: 25px;
+  width: 25px;
 }

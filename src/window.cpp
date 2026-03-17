@@ -9,7 +9,8 @@ std::string cleanString(std::string clean_req) {
 void bindings(webview::webview& w) {
 	w.bind("searchFile", [&](std::string req) -> std::string {
 		std::string path = getPath();
-		init_sound_from_file(path);
+		//init_sound_from_file(path);
+		addToQueue(path);
 		play = false;
 		return "\"" + path + "\"";
 		});
@@ -24,6 +25,14 @@ void bindings(webview::webview& w) {
 			play = !play;
 			return R"("playing")";
 		}
+		});
+	w.bind("nextSong", [&](std::string req)->std::string {
+		skipCurrent();
+		return "\"\"";
+		});
+	w.bind("backSong", [&](std::string req)->std::string {
+		previousSound();
+		return "\"\"";;
 		});
 	w.bind("volumeChange", [&](std::string req) -> std::string {
 		std::string clean_req = cleanString(req);
@@ -50,6 +59,11 @@ void bindings(webview::webview& w) {
 	w.bind("getTitle", [&](std::string req)-> std::string {
 		return "\"" + getTitle() + "\"";
 		//return "";
+		});
+	w.bind("isSongEnding", [&](std::string req) -> std::string {
+		if (ma_sound_at_end(getSound()))
+			return R"("true")";
+		return R"("false")";
 		});
 }
 #ifdef _WIN32

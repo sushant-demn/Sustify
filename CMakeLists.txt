@@ -19,6 +19,7 @@ set(SOURCE_FILES
     src/window.cpp
     src/audio.cpp
     src/file_system.cpp
+    src/queue.cpp
 )
 
 

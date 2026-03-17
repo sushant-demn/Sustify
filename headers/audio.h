@@ -14,3 +14,5 @@ float getLength();
 float getProg();
 void setSeek(float time);
 std::string getTitle();
+
+bool checkPlaying();

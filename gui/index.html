@@ -18,11 +18,17 @@
                 src="https://upload.wikimedia.org/wikipedia/en/7/70/Graduation_%28album%29.jpg" alt="album-cover"></div>
 
         <div class="player-controls">
-            <div class="song-title">Title</div>
+            <div class="song-title">Currently Not Playing</div>
             <div class="buttons">
-                <span>⏮</span>
-                <span onclick="playPause()">⏸</span>
-                <span>⏭</span>
+                <span onclick="previous()">
+                    <img class="previousSong" src="./icons/back.png">
+                </span>
+                <span onclick="playPause()">
+                    <img class="play_pause" onclick="changePlayPauseIcon()" src="./icons/pause.png" alt="pause buttons">
+                </span>
+                <span onclick="next()">
+                    <img class="nextSong" src="./icons/next.png">
+                </span>
             </div>
         </div>
 

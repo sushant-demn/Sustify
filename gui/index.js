@@ -1,6 +1,9 @@
 const volumeSlider = document.querySelector('.volume-slider');
 const volumeValueDisplay = document.getElementById('volume-value');
 const progressBar = document.querySelector('.progress-bar');
+const playerControls = document.querySelector('play_pause');
+const pauseIcon = "./icons/pause.png";
+const playIcon = "./icons/play.png";
 
 async function getPath() {
     let response = await window.searchFile();
@@ -16,7 +19,7 @@ async function getPath() {
 }
 
 function changeTitle(title) {
-    
+
     const titleElement = document.querySelector('.song-title');
     if (titleElement) {
         titleElement.textContent = title;
@@ -27,6 +30,17 @@ function changeTitle(title) {
 
 async function playPause() {
     let response = await window.stopStart();
+}
+
+async function next() {
+    await window.nextSong();
+    let title = await window.getTitle();
+    changeTitle(title);
+}
+async function previous() {
+    await window.backSong();
+    let title = await window.getTitle();
+    changeTitle(title);
 }
 
 volumeSlider.addEventListener('input', async function (e) {
@@ -62,9 +76,11 @@ async function progressLoop() {
 
         let value = (currentTime / duration) * 100;
 
-
         updateProgressBar(progressBar, value, formatTime(currentTime));
-    })
+        if (await window.isSongEnding() == "true") {
+            next();
+        }
+    }, 1000)
 }
 
 progressBar.addEventListener('click', async (e) => {
@@ -76,3 +92,12 @@ progressBar.addEventListener('click', async (e) => {
     console.log(percentage);
     await window.seekSound(percentage);
 });
+
+function changePlayPauseIcon() {
+    if (document.querySelector('.play_pause').src == pauseIcon) {
+        document.querySelector('.play_pause').src = playIcon;
+    }
+    // if(document.querySelector('.play_pause').src == pauseIcon){
+    //     document.querySelector('.play_pause').src = playIcon;
+    // }
+}
