@@ -13,6 +13,6 @@ void init_sound_from_file(std::string path);
 float getLength();
 float getProg();
 void setSeek(float time);
-std::string getTitle();
+std::string getTitle(std::string path);
 
 bool checkPlaying();

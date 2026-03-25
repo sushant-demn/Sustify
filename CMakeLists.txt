@@ -5,7 +5,9 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-project ("MusicStreamingApp")
+project ("Sustify")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
 
@@ -20,27 +22,28 @@ set(SOURCE_FILES
     src/audio.cpp
     src/file_system.cpp
     src/queue.cpp
+    src/bindings.cpp
 )
 
+file(GLOB_RECURSE UI_FILES "gui/*")
 
-add_executable (MusicStreamingApp WIN32 "${SOURCE_FILES}")
+add_executable (Sustify WIN32 "${SOURCE_FILES}" "${UI_FILES}")
 
-
-
-target_link_libraries(MusicStreamingApp PRIVATE webview::core)
-target_include_directories(MusicStreamingApp PRIVATE "C:/vcpkg/installed/x64-windows/include")
-target_link_libraries(MusicStreamingApp PRIVATE "C:/vcpkg/installed/x64-windows/lib/tag.lib")
-target_include_directories(MusicStreamingApp PUBLIC "${PROJECT_SOURCE_DIR}/include")
-target_include_directories(MusicStreamingApp PUBLIC "${PROJECT_SOURCE_DIR}/headers")
-
-add_custom_command(TARGET MusicStreamingApp POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "C:/vcpkg/installed/x64-windows/bin/tag.dll"
-    $<TARGET_FILE_DIR:MusicStreamingApp>
+add_custom_command(TARGET Sustify POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/gui"
+        "$<TARGET_FILE_DIR:Sustify>/gui"
+    COMMENT "Syncing the latest GUI files to the build folder..."
 )
+
+target_link_libraries(Sustify PRIVATE webview::core)
+target_include_directories(Sustify PRIVATE "C:/vcpkg/installed/x64-windows/include")
+target_link_libraries(Sustify PRIVATE "C:/vcpkg/installed/x64-windows/lib/tag.lib")
+target_include_directories(Sustify PUBLIC "${PROJECT_SOURCE_DIR}/include")
+target_include_directories(Sustify PUBLIC "${PROJECT_SOURCE_DIR}/headers")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET MusicStreamingApp PROPERTY CXX_STANDARD 20)
+  set_property(TARGET Sustify PROPERTY CXX_STANDARD 20)
 endif()
 
 

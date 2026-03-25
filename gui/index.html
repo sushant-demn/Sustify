@@ -3,11 +3,25 @@
 
 <head>
     <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+        rel="stylesheet">
     <script src="index.js" defer></script>
 </head>
 
 <body>
-
+    <div class="queueWrapper">
+        <div class="queueTab" onclick="openPanel()">
+            Queue
+            <img src="./icons/left-arrow.png" alt="left-arrow" class="left-arrow">
+        </div>
+        <div class="queuePanel" id="queuePanel">
+            <div class="queueContent">
+                <p class="queueText">Queue</p>
+            </div>
+        </div>
+    </div>
     <div class="top-bar">
         <!-- <h3 class="appname">this is a music player</h3> -->
         <div class="search-icon" onclick="getPath()">🔍</div>
@@ -19,21 +33,24 @@
 
         <div class="player-controls">
             <div class="song-title">Currently Not Playing</div>
+            <div class="song-artist"></div>
             <div class="buttons">
                 <span onclick="previous()">
                     <img class="previousSong" src="./icons/back.png">
                 </span>
                 <span onclick="playPause()">
-                    <img class="play_pause" onclick="changePlayPauseIcon()" src="./icons/pause.png" alt="pause buttons">
+                    <img class="play_pause" onclick="changePlayPauseIcon()" src="./icons/play.png" alt="pause buttons">
                 </span>
                 <span onclick="next()">
                     <img class="nextSong" src="./icons/next.png">
                 </span>
             </div>
         </div>
+        <div class="volume-container">
+            <input type="range" class="volume-slider" min="0" max="100">
+            <span id="volume-value">50%</span>
+        </div>
 
-        <input type="range" class="volume-slider" min="0" max="100">
-        <span id="volume-value">50%</span>
 
     </div>
 

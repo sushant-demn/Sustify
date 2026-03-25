@@ -444,9 +444,10 @@ features include:
 
 Sounds can be faded in and out with `ma_sound_set_fade_in_pcm_frames()`.
 
-To check if a sound is currently playing, you can use `ma_sound_is_playing()`. To check if a sound
-is at the end, use `ma_sound_at_end()`. Looping of a sound can be controlled with
-`ma_sound_set_looping()`. Use `ma_sound_is_looping()` to check whether or not the sound is looping.
+To check if a sound is currently playing, you can use `ma_sound_is_playing()`. 
+To check if a sound is at the end, use `ma_sound_at_end()`. 
+Looping of a sound can be controlled with `ma_sound_set_looping()`. 
+Use `ma_sound_is_looping()` to check whether or not the sound is looping.
 
 
 

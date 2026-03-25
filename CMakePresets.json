@@ -38,6 +38,19 @@
             }
         },
         {
+            "name": "x64-MinSizeRel",
+            "displayName": "x64 Minimal Size Release",
+            "description": "Highly optimized for the smallest possible .exe file size",
+            "inherits": "windows-base", 
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "MinSizeRel" 
+            }
+        },
+        {
             "name": "x86-debug",
             "displayName": "x86 Debug",
             "inherits": "windows-base",
@@ -56,6 +69,12 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "x64-MinSizeRel",
+            "configurePreset": "x64-MinSizeRel"
         }
     ]
 }

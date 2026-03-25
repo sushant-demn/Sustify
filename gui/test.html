@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #b79fff;
+            --primary-dim: #a88cfb;
+            --primary-container: #ab8ffe;
+            --on-primary-container: #290070;
+            --surface-dim: #060e20;
+            --surface-variant: #192540;
+            --on-surface: #dee5ff;
+            --on-surface-variant: #a3aac4;
+            --background: #000000;
+            --obsidian: #0a0a0f;
+            --font-main: 'Manrope', sans-serif;
+            --radius-md: 1rem;
+            --radius-lg: 2rem;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: var(--background);
+            font-family: var(--font-main);
+            color: var(--on-surface);
+        }
+
+        .player-widget {
+            position: relative;
+            width: 530px;
+            height: 260px;
+            background-color: var(--surface-dim);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 32px 64px rgba(183, 159, 255, 0.08);
+        }
+
+        .main-content {
+            display: flex;
+            flex: 1;
+            padding: 24px;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .album-art {
+            position: relative;
+            flex-shrink: 0;
+            width: 180px;
+            height: 180px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .album-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .album-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+        }
+
+        .track-controls-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 24px;
+            height: 100%;
+        }
+
+        .metadata {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .track-title {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .artist-name {
+            margin: 0;
+            color: var(--on-surface-variant);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .controls-row {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: var(--on-surface);
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover {
+            color: var(--primary);
+        }
+
+        .play-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-container));
+            color: var(--on-primary-container);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .play-btn:active {
+            transform: scale(0.95);
+        }
+
+        .secondary-controls {
+            margin-left: auto;
+            display: flex;
+            gap: 16px;
+        }
+
+        .secondary-btn {
+            background: none;
+            border: none;
+            color: var(--on-surface-variant);
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 0;
+        }
+
+        .secondary-btn:hover {
+            color: var(--primary);
+        }
+
+        .secondary-btn.fav:hover {
+            color: #5af0b4;
+        }
+
+        .progress-section {
+            width: 100%;
+            padding: 0 24px 24px 24px;
+            box-sizing: border-box;
+        }
+
+        .progress-bar-bg {
+            position: relative;
+            width: 100%;
+            height: 6px;
+            background-color: var(--surface-variant);
+            border-radius: 999px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 42%;
+            background: linear-gradient(to right, var(--primary), var(--primary-dim));
+            border-radius: 999px;
+            transition: width 0.3s ease;
+        }
+
+        .time-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        .time-labels span {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--on-surface-variant);
+            letter-spacing: 0.05em;
+        }
+
+        /* Queue Drawer */
+        .queue-drawer {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 240px;
+            background: rgba(10, 10, 15, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            z-index: 20;
+        }
+
+        .queue-header {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .queue-header h3 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .close-queue-btn {
+            background: none;
+            border: none;
+            color: var(--on-surface-variant);
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .queue-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        .queue-list::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .queue-list::-webkit-scrollbar-thumb {
+            background: rgba(183, 159, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        .queue-item {
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .queue-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .queue-item.active {
+            background: rgba(183, 159, 255, 0.1);
+            border-left: 2px solid var(--primary);
+            position: relative;
+        }
+
+        .queue-item.active::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(183, 159, 255, 0.05);
+            filter: blur(8px);
+            z-index: -1;
+        }
+
+        .queue-thumb {
+            width: 40px;
+            height: 40px;
+            border-radius: 2px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .queue-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .queue-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .queue-track-name {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .queue-artist-name {
+            margin: 0;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--on-surface-variant);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .active .queue-artist-name {
+            color: var(--primary);
+        }
+
+        .active-indicator {
+            width: 6px;
+            height: 6px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        .queue-footer {
+            padding: 16px;
+            background: rgba(10, 10, 15, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-logo-small {
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+        }
+
+        .brand-text-small {
+            font-size: 10px;
+            font-weight: 900;
+            color: rgba(222, 229, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="player-widget">
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Album Art Left -->
+            <div class="album-art">
+                <img alt="Album cover"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcQSmvDRHCTaC_xR1-PnjqFSV-EIhsNyttP92n5tc4SAdtMYZT6klmmDXGAZCrSlweBEPIV6SJBgf0e3HCJqzDjgDzZBMeHaATWpIl4gL63ifOs39mA7YHtf3rLoc9z3yqo-XYgm2i2C9yXTXw0CPNxL3DPZw_a2xb9yReQioJabsyAaAPteAFaPCdaifVfpCQIZ_oovXKP8I9KVqtGg0JW0wZT8v3PezuoOye34ccuL-rNCIl5xY2tqBZhHMSWh_NLkHAAVPl8A" />
+                <div class="album-overlay"></div>
+            </div>
+            <!-- Track Info & Controls Right -->
+            <div class="track-controls-container">
+                <div class="metadata">
+                    <h2 class="track-title">Midnight Echo</h2>
+                    <p class="artist-name">The Obsidian Collective</p>
+                </div>
+                <div class="controls-row">
+                    <button class="control-btn">
+                        <span class="material-symbols-outlined" style="font-size: 32px;">skip_previous</span>
+                    </button>
+                    <button class="control-btn play-btn">
+                        <span class="material-symbols-outlined fill-icon" style="font-size: 40px;">play_arrow</span>
+                    </button>
+                    <button class="control-btn">
+                        <span class="material-symbols-outlined" style="font-size: 32px;">skip_next</span>
+                    </button>
+                    <div class="secondary-controls">
+                        <button class="secondary-btn fav">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">favorite</span>
+                        </button>
+                        <button class="secondary-btn">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">queue_music</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Progress Bar Bottom -->
+        <div class="progress-section">
+            <div class="progress-bar-bg">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="time-labels">
+                <span>1:42</span>
+                <span>4:05</span>
+            </div>
+        </div>
+        <!-- Queue Drawer -->
+        <div class="queue-drawer">
+            <div class="queue-header">
+                <h3>Up Next</h3>
+                <button class="close-queue-btn">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">close</span>
+                </button>
+            </div>
+            <div class="queue-list">
+                <!-- Active Track Item -->
+                <div class="queue-item active">
+                    <div class="queue-thumb">
+                        <img alt="Thumbnail"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcQSmvDRHCTaC_xR1-PnjqFSV-EIhsNyttP92n5tc4SAdtMYZT6klmmDXGAZCrSlweBEPIV6SJBgf0e3HCJqzDjgDzZBMeHaATWpIl4gL63ifOs39mA7YHtf3rLoc9z3yqo-XYgm2i2C9yXTXw0CPNxL3DPZw_a2xb9yReQioJabsyAaAPteAFaPCdaifVfpCQIZ_oovXKP8I9KVqtGg0JW0wZT8v3PezuoOye34ccuL-rNCIl5xY2tqBZhHMSWh_NLkHAAVPl8A" />
+                    </div>
+                    <div class="queue-item-info">
+                        <p class="queue-track-name">Midnight Echo</p>
+                        <p class="queue-artist-name">The Obsidian Collective</p>
+                    </div>
+                    <div class="active-indicator"></div>
+                </div>
+                <!-- Queue Items -->
+                <div class="queue-item">
+                    <div class="queue-thumb" style="opacity: 0.8;">
+                        <img alt="Thumbnail"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMY2f3WxyZ7tOC-zAy8_6Ny_KcQTmBV0Go5bcWP2mH_I6X6xvMBKaGNUt1W9OKTAmRW9SxQ-MD9-7q4zDhqlR0RUexd1c_KxCZRGrp16uOLI4o37xbuxIz1ep0tm587M6EuwAStiP8K-htZrFYe0lzlMauuePrEXxckNoy_LG9CXgoFTTshdGHg3S3JhTj6qryH6W1huH0Ooo-lQoL3EKHLGGdxit1YiAd5tt5k5SbDN0Ib3OCBYWq1O1yTw5a8dmb9TLdWAXv6w" />
+                    </div>
+                    <div class="queue-item-info">
+                        <p class="queue-track-name" style="color: rgba(222,229,255,0.8);">Neon Horizon</p>
+                        <p class="queue-artist-name">Ether Drift</p>
+                    </div>
+                </div>
+                <div class="queue-item">
+                    <div class="queue-thumb" style="opacity: 0.8;">
+                        <img alt="Thumbnail"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV-xyWwnM3LkVjDehwljM2Bu5gV4N76CnrgQk_QGEblkTFU3fWAKVqBRy4JzjlaViK8fwAKumM-U85kt2970CtMylXBR9ybZ1UdLjdPH0BVPGGQK0BZIAFKvs_A8Yk_hnURFwri3eIjPzc1DtbWXkQDW0rmUlIbxaOxJ2DA9UNphamfOetfewSTh6m5AGzmgPWONr7Oz9ZDPOaZUZAjq5ocfrYriCUQddAlB9Cb8tLurg7MJqYuiVvRcNb6tke6NUBbN-9jngfEw" />
+                    </div>
+                    <div class="queue-item-info">
+                        <p class="queue-track-name" style="color: rgba(222,229,255,0.8);">Static Dreams</p>
+                        <p class="queue-artist-name">Vapor Lane</p>
+                    </div>
+                </div>
+                <div class="queue-item">
+                    <div class="queue-thumb" style="opacity: 0.8;">
+                        <img alt="Thumbnail"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHgiAEAgsZUtMY1ktSOTGnpcG_8wxh5zkoadosIyGZfNEMzHIMMqsKc3x-wCVtVWyRuCBP0adSs_hCGushx35Mk_y7UmAV3hjcE1SKgHzvCs7xe8w7z6JOpzNwPnRfuTQLrMPLP5vudnpnP4e1PzEvC_CKGg-vn7lBTreMc0AuqVtmAcDK3VpQUTRo8Cj_U0IPIGycpUPtwa5XHsRUVDa6lVbv10iWo9pB91x_KRylH0k6fwHuWepwRBtkOe37u8VSs-Vy-LEMKg" />
+                    </div>
+                    <div class="queue-item-info">
+                        <p class="queue-track-name" style="color: rgba(222,229,255,0.8);">Velvet Skies</p>
+                        <p class="queue-artist-name">Sonic Canvas</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Branding -->
+            <div class="queue-footer">
+                <img alt="Sustify Logo" class="brand-logo-small"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1Ji2zFetL7aaiZHSMBcHNsipjcjBDxyH52zArPpy5pCQYHqn14RWNfmiupfqs_o_m4X4igSYsbBVlBhKlCM9vtVr-GFfapn2RulNyUi37GJ9yTvCTT5o_UUXGq-tfYzTGtFSzqZuVIuH38ji4O2VrVTD2hDpFt03bxmiooOnXFBl4CM0ibDPN7-OExQcyzhJVs3QDHRtq6FnW6vUqUG58Y26b5jQlPP5kqvt-IVfOYGOVg1cwgqZc6lFapV-EQKxjIozIeLcpBQ" />
+                <span class="brand-text-small">Sustify Premium</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -13,7 +13,7 @@ using namespace std;
 float soundLength = 0.0f;
 float cursor = 0.0f;
 string currentTitle = ""; //song Title
-bool playingStatus = false;
+bool playingStatus = false;  
 
 
 void check_Result(ma_result result, const string& error_message) { // A simple error handling implementation can be used with MA methods returning MA_SUCCESS.
@@ -22,7 +22,7 @@ void check_Result(ma_result result, const string& error_message) { // A simple e
 	}
 }
 
-ma_engine engine; //audio engine
+ma_engine engine; //audio engine 
 ma_result result; //result variable
 ma_sound sound; //sound data
 
@@ -55,19 +55,6 @@ void init_sound_from_file(string path) { // initialize the sound data with the m
 	playingStatus = true;
 	ma_sound_get_length_in_seconds(&sound, &soundLength);
 	ma_sound_set_volume(&sound, 0.5f);
-	{
-		TagLib::FileRef track(path.c_str()); // sets track meta-data to the track obj
-		if (!track.isNull() && track.tag()) {
-			TagLib::String tagTitle = track.tag()->title();
-			if (!tagTitle.isEmpty()) {
-				const char* titlePtr = tagTitle.toCString(true);
-				if (titlePtr != nullptr) {
-					currentTitle = string(titlePtr);
-				}
-			}
-
-		}
-	}
 	ma_sound_start(&sound);
 }
 
@@ -85,8 +72,20 @@ void setSeek(float time) { //seeks song to given float time
 	check_Result(ma_sound_seek_to_second(&sound, time), "cannot seek there mate!");
 }
 
-string getTitle() {
-	return currentTitle;
+string getTitle(std::string path) {
+	std::string title;
+	TagLib::FileRef track(path.c_str()); // sets track meta-data to the track obj
+	if (!track.isNull() && track.tag()) {
+		TagLib::String tagTitle = track.tag()->title();
+		if (!tagTitle.isEmpty()) {
+			const char* titlePtr = tagTitle.toCString(true);
+			if (titlePtr != nullptr) {
+				title = string(titlePtr);
+			}
+		}
+
+	}
+	return title;
 }
 
 bool checkPlaying() { //returns songs playing status
