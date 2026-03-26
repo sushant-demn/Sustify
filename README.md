@@ -26,7 +26,7 @@ You must install `taglib` via vcpkg before building. `zlib` will be installed au
 vcpkg install taglib:x64-windows
 ```
 
-##Project Structure
+## Project Structure
 ```
 Sustify/
 ├── CMakeLists.txt      # Build configuration and automated asset syncing
@@ -38,7 +38,7 @@ Sustify/
 └── include/            # External include directories
 ```
 
-##Building the Project
+## Building the Project
 1. Clone the repository and navigate to the project root.
 2. Configure the project with CMake, pointing it to your vcpkg toolchain file. Replace <path-to-vcpkg> with your actual vcpkg installation path:
 ```
