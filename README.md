@@ -30,7 +30,6 @@ vcpkg install taglib:x64-windows
 ```
 Sustify/
 ├── CMakeLists.txt      # Build configuration and automated asset syncing
-├── main.cpp            # Application entry point
 ├── resources.rc        # Windows resource script for the application icon
 ├── gui/                # Frontend assets (HTML, CSS, JS, images)
 ├── src/                # C++ source files (window.cpp, audio.cpp, etc.)
