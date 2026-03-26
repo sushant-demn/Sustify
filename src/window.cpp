@@ -19,13 +19,12 @@ int main() {
 	initEngine();
 
 	try {
-		webview::webview w(true, NULL);
+		webview::webview w(false, NULL);
 
 		w.set_title("sustify");
 		w.set_size(530, 260, WEBVIEW_HINT_FIXED);
 		bindings(w);
 		w.navigate(finalUri);
-		//w.navigate("file:///E:/code/MusicStreamingApp/gui/index.html");
 		w.run();
 	}
 

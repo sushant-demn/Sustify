@@ -23,9 +23,9 @@ track buildTrack(std::string path) {
 
 	t.path = path;
 	t.title = path.substr(path.find_last_of("/\\") + 1);
-	t.artist = "Unkown Artist";
+	t.artist = getTitle(path)[1];
 	//t.duration = getLength()
-	t.title = getTitle(path);
+	t.title = getTitle(path)[0];
 	return t;
 }
 
@@ -126,6 +126,6 @@ std::string getCurrentMeta() {
 }
 
 void changeSong(int cursor) {
-	currentCursor = cursor;	
+	currentCursor = cursor;
 	init_sound_from_file(queue[cursor].path);
 }

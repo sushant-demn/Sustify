@@ -13,7 +13,7 @@ using namespace std;
 float soundLength = 0.0f;
 float cursor = 0.0f;
 string currentTitle = ""; //song Title
-bool playingStatus = false;  
+bool playingStatus = false;
 
 
 void check_Result(ma_result result, const string& error_message) { // A simple error handling implementation can be used with MA methods returning MA_SUCCESS.
@@ -72,21 +72,24 @@ void setSeek(float time) { //seeks song to given float time
 	check_Result(ma_sound_seek_to_second(&sound, time), "cannot seek there mate!");
 }
 
-string getTitle(std::string path) {
-	std::string title;
+vector<string> getTitle(std::string path) {
+	std::string title = "Unknown", artist = "Unknown Artist";
 	TagLib::FileRef track(path.c_str()); // sets track meta-data to the track obj
 	if (!track.isNull() && track.tag()) {
-		TagLib::String tagTitle = track.tag()->title();
+		TagLib::String tagTitle = track.tag()->title(), tagArtist = track.tag()->artist();
 		if (!tagTitle.isEmpty()) {
 			const char* titlePtr = tagTitle.toCString(true);
-			if (titlePtr != nullptr) {
+			const char* artistPtr = tagArtist.toCString(true);
+			if (titlePtr != nullptr && artistPtr != nullptr) {
 				title = string(titlePtr);
+				artist = string(artistPtr);
 			}
 		}
 
 	}
-	return title;
+	return { title, artist };
 }
+
 
 bool checkPlaying() { //returns songs playing status
 	return (playingStatus == true) ? true : false;

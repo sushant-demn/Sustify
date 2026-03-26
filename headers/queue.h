@@ -24,4 +24,4 @@ std::string getCurrentSongTitle();
 std::string getQueue();
 std::string getLatestMeta();
 std::string getCurrentMeta();
-void changeSong(int cursor);
+void changeSong(int cursor);	

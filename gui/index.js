@@ -5,19 +5,25 @@ const playerControls = document.querySelector('play_pause');
 const queuelists = document.querySelector('queuePanel');
 const pauseIcon = "./icons/pause.png";
 const playIcon = "./icons/play.png";
+let progressInterval = null;
+let isSeeking = false;
+
+document.addEventListener('contextmenu', function(event) {
+    event.preventDefault();
+});
 
 async function getPath() {
     let response = await window.searchFile();
-    console.log(response);
+    //console.log(response);
     if (!response || response.trim() === "selection cancelled") {
-        console.log("User canceled file selection.");
+        //console.log("User canceled file selection.");
         return;
     }
     getLatestMeta();
     let title = await window.getTitle();
-    // changeTitle(title);
+
     updateCurrentMeta();
-    progressLoop();
+    startProgressLoop();
 
 }
 
@@ -40,12 +46,12 @@ async function updateCurrentMeta() {
     await window.volumeChange(volumeValueDisplay.textContent);
 
     const prev = document.querySelector(".queueContent .active");
-    console.log(prev)
+    //console.log(prev)
     if (prev)
         prev.classList.remove("active");
 
     const current = document.getElementById(meta[3]);
-    console.log(current);
+    //console.log(current);
     if (current)
         current.classList.add("active");
 
@@ -53,7 +59,7 @@ async function updateCurrentMeta() {
 
 async function playPause() {
     let response = await window.stopStart();
-    console.log(response);
+    //console.log(response);
 }
 
 async function next() {
@@ -90,30 +96,43 @@ function formatTime(rawSeconds) {
     return minutes + ":" + seconds;
 }
 
-async function progressLoop() {
-    let duration = await window.getSongLength();
 
-    setInterval(async () => {
+async function startProgressLoop() {
+
+    if (progressInterval) clearInterval(progressInterval);
+
+    progressInterval = setInterval(async () => {
+        if (isSeeking) return;
+
+        const duration = await window.getSongLength();
         let currentTime = await window.getCursor();
-
         let value = (currentTime / duration) * 100;
-
         updateProgressBar(progressBar, value, formatTime(currentTime));
-        if (await window.isSongEnding() == "true") {
+
+        if (await window.isSongEnding() == "true")
             next();
-        }
-    }, 1000)
+
+    }, 1000);
 }
 
+
 progressBar.addEventListener('click', async (e) => {
+    isSeeking = true;
+
     const totalWidth = progressBar.clientWidth;
-
     const clickX = e.offsetX;
-
     const percentage = clickX / totalWidth;
-    console.log(percentage);
+    const duration = await window.getSongLength();
+
+    updateProgressBar(progressBar, percentage * 100, formatTime(percentage * duration));
+
     await window.seekSound(percentage);
+
+
+    setTimeout(() => { isSeeking = false; }, 800);
 });
+
+
 
 function changePlayPauseIcon() {
     const iconElement = document.querySelector('.play_pause');
@@ -145,13 +164,13 @@ function openPanel() {
 
 async function updateQueue() {
     let queueArray = await window.getQueue()
-    console.log(queueArray);
+    //console.log(queueArray);
 
     const queueList = document.querySelector(".queueContent");
     queueArray.forEach(element => {
         const li = document.createElement('li');
-        li.textContent = element; // Set the text content of the list item
-        queueList.appendChild(li); // Append the <li> to the <queueList>
+        li.textContent = element;
+        queueList.appendChild(li);
     });
 }
 
@@ -163,7 +182,7 @@ async function getLatestMeta() {
     }
     firstSong = false;
     let meta = await window.addToQueue();
-    console.log(meta);
+    //console.log(meta);
     const queueList = document.querySelector(".queueContent");
     let ul = queueList.querySelector(".song-list");
     if (!ul) {
@@ -185,9 +204,10 @@ document.addEventListener('DOMContentLoaded', function () {
     panel.addEventListener('click', async function (event) {
         const clickedItem = event.target.closest('li');
         if (clickedItem) {
-            console.log(clickedItem.id);
+            //console.log(clickedItem.id);
             res = await window.changeSong(clickedItem.id);
-            console.log(res);
+            //console.log(res);
+            document.querySelector('.play_pause').src = pauseIcon;
             updateCurrentMeta();
         }
     });

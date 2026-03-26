@@ -10,7 +10,6 @@ std::string cleanString(std::string clean_req) {
 void bindings(webview::webview& w) {
 	w.bind("searchFile", [&](std::string req) -> std::string {
 		std::string path = getPath();
-		//init_sound_from_file(path);
 		addToQueue(path);
 		return "\"" + path + "\"";
 		});
@@ -20,7 +19,7 @@ void bindings(webview::webview& w) {
 			return R"("paused")";
 		}
 		else {
-			ma_sound_start(getSound());
+			ma_sound_start(getSound());			
 			return R"("playing")";
 		}
 		});
